@@ -1,9 +1,14 @@
-using System;
+﻿using System;
+using System.Threading;
 
-class Program
+namespace MindfullnessApp
 {
-    static void Main(string[] args)
+    class Program
     {
-        Console.WriteLine("Hello Develop04 World!");
+        static void Main(string[] args)
+        {
+            Activity activity = new Activity();
+            activity.ShowMenu(); 
+        }
     }
 }
