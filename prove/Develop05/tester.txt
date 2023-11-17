@@ -1,0 +1,4 @@
+51
+Simple<>test<>test the completed bool<>10<>True
+Checklist<>test<>test the completed int, finish bool, and bonus points int<>10<>4<>5<>False<>100
+Eternal<>tests<>test each thing to make sure it works as intented<>1
