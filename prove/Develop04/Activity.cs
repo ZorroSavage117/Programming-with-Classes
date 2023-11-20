@@ -1,114 +1,83 @@
-using System;
-using System.Threading;
-
-namespace MindfullnessApp
+using System.Timers;
+public class Activity
 {
-    class Activity
+    private System.Timers.Timer _timer;
+    public void Menu()
     {
-
-
-        public void ShowMenu()
+        Console.Clear();
+        Console.WriteLine("Menu Options:");
+        Console.WriteLine("1. Start breathing activity");
+        Console.WriteLine("2. Start listing activity");
+        Console.WriteLine("3. Start reflection activity");
+        Console.WriteLine("4. Exit");
+        int choice = Convert.ToInt32(Console.ReadLine());
+        switch (choice)
         {
-            int choice = 0;
-            bool continueProgram = true;
-
-            while (continueProgram)
-            {
-                string menu = @"
-Mindfulness App Menu:
-1. Breathing Exercise
-2. Reflection Exercise
-3. Listing Exercise
-4. Quit
-                ";
-                Console.WriteLine(menu);
-
-                bool validInput = false;
-
-                while (!validInput)
-                {
-                    try
-                    {
-                        Console.Write("Select an option: ");
-                        choice = int.Parse(Console.ReadLine());
-
-                        if (choice >= 1 && choice <= 4)
-                        {
-                            validInput = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Please enter a valid number between 1 and 4.");
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("Invalid input. Please enter a number.");
-                    }
-                }
-
-                switch (choice)
-                {
-                    case 1:
-                        BreathingActivity breathingActivity = new BreathingActivity();
-                        breathingActivity.BreathingExercise();
-                        break;
-                    case 2:
-                        ReflectionActivity reflectionActivity = new ReflectionActivity();
-                        reflectionActivity.ReflectionExercise();
-                        break;
-                    case 3:
-                        ListingActivity listingActivity = new ListingActivity();
-                        listingActivity.ListingExercise();
-                        break;
-                    case 4:
-                        Console.WriteLine("Exiting... Take care!");
-                        continueProgram = false;
-                        break;
-                }
-            }
+            case 1:
+                Breathing breathing = new Breathing();
+                breathing.Start();
+                break;
+            case 2:
+                Listing listing = new Listing();
+                listing.Start();
+                break;
+            case 3:
+                Reflection reflection = new Reflection();
+                reflection.Start();
+                break;
+            case 4:
+                Console.WriteLine("Goodbye!");
+                Thread.Sleep(1000);
+                Environment.Exit(0);
+                break;
+            default:
+                Console.WriteLine("Invalid choice");
+                Menu();
+                break;
         }
+    }
 
+    public virtual void Stop() {Menu();}
 
-        protected void RunTimer(int seconds, bool showSpinner = false)
+    public void DisplaySpinningLine(int seconds)
+    {
+        int counter = 0;
+        while (counter < seconds * 2) // Display for twice the number of seconds (assuming half-second intervals)
         {
-            bool countDownIsRunning = true;
-            Thread spinnerThread = null;
-
-            if (showSpinner)
-            {
-                spinnerThread = new Thread(() =>
-                {
-                    char[] spinnerChars = new char[] { '/', '-', '\\', '|' };
-                    int i = 0;
-                    while (countDownIsRunning)
-                    {
-                        Console.Write("\r" + spinnerChars[i % 4]);
-                        i++;
-                        Thread.Sleep(100);
-                    }
-                });
-
-                spinnerThread.Start();
-            }
-
-            // Run the timer on the main thread
-            Thread.Sleep(seconds * 1000);
-
-            // Stop the spinner
-            countDownIsRunning = false;
-
-            if (spinnerThread != null)
-            {
-                spinnerThread.Join();  // Wait for the spinner thread to complete
-            }
+            counter++;
+            Console.Write("\b{0}", GetSpinnerCharacter(counter));
+            Thread.Sleep(500);
         }
+        Console.WriteLine();
+    }
 
-        protected void GoodbyeMessage(string activity)
+    private char GetSpinnerCharacter(int counter)
+    {
+        char[] spinner = { '|', '/', '-', '\\' };
+        return spinner[counter % spinner.Length];
+    }
+
+    public void CountDown(int seconds)
+    {
+        for (int i = seconds; i >= 1; i--)
         {
-            Console.WriteLine($"You have finished the {activity} activity!");
+            Console.Write("{0} ", i);
+            Thread.Sleep(1000);
+            Console.Write("\b\b");
         }
+        Console.WriteLine();
+    }
 
+    public void StartTimer(int seconds)
+    {
+        _timer = new System.Timers.Timer(seconds * 1000);
+        _timer.Elapsed += TimerElapsed;
+        _timer.AutoReset = false;
+        _timer.Enabled = true;
+    }
 
+     private void TimerElapsed(object sender, ElapsedEventArgs e)
+    {
+        Stop();
     }
 }

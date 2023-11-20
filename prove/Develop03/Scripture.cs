@@ -1,92 +1,67 @@
-public class Word
-{
-    public string Reference { get; set; }
-    public int VerseNumber { get; set; }
-    public string Content { get; set; }
-
-    public Word(string reference, int verseNumber, string content)
-    {
-        Reference = reference;
-        VerseNumber = verseNumber;
-        Content = content;
-    }
-}
-
 public class Scripture
 {
-    // Properties
-    public string Book { get; }
-    public int Chapter { get; }
-    public int StartingVerse { get; }
-    public int EndingVerse { get; }
-    public string Content { get; set; }
-    public List<string> Words { get; set; }
+    private List<Word> scripture;
+    private bool _isBlankedOut;
+    private Random rand;
 
-    private static Random random = new Random();
-    // Add a new property to your Scripture class
-    public Dictionary<string, bool> RedactedWords { get; set; }
-
-    // Constructor
-    public Scripture(string book, int chapter, int startingVerse, int endingVerse, string content)
+    public Scripture(string scripture_in)
     {
-        Book = book;
-        Chapter = chapter;
-        StartingVerse = startingVerse;
-        EndingVerse = endingVerse;
-        Content = content;
-        Words = content.Split(' ').ToList();
+        scripture = new List<Word>();
+        string[] words = scripture_in.Split(' ');
+        foreach (string word in words)
+        {
+            scripture.Add(new Word(word));
+        }
 
+        rand = new Random();
+        _isBlankedOut = false;
     }
 
-    public string ScriptureHeading()
+    public void display()
     {
-        if (StartingVerse == EndingVerse)
+        foreach (Word word in scripture)
         {
-            return $"Memorize this scripture from {Book} {Chapter}:{StartingVerse}";
+            Console.Write(word.GetWord() + " ");
         }
-        else
-        {
-            return $"Memorize this scripture from {Book} {Chapter}:{StartingVerse}-{EndingVerse}";
-        }
+        Console.WriteLine();
     }
 
-
-
-
-    // Method to return formatted Scripture
-    public List<Word> FormatContent()
+    private void SetisBlankedOut()
     {
-        // Update Content based on the Words list.
-        Content = string.Join(" ", Words);
-
-        // Split the Content string into individual verses based on your separator.
-        string[] verses = Content.Split('|');
-
-        // Initialize a list to hold Word objects.
-        List<Word> formattedContent = new List<Word>();
-
-        // Loop through the verses and append verse numbers.
-        for (int i = 0; i < verses.Length; i++)
+        foreach (Word word in scripture)
         {
-            // Calculate the current verse number based on StartingVerse.
-            int currentVerseNumber = StartingVerse + i;
-
-            // Get the reference for the current verse.
-            string reference = $"{Book} {Chapter}:{currentVerseNumber}";
-
-            // Split each verse into words.
-            string[] wordsInVerse = verses[i].Trim().Split(' ');
-
-            // Create a Word object for each word and add it to the list.
-            foreach (string word in wordsInVerse)
+            if (word.GetIsBlankedOut() == false)
             {
-                formattedContent.Add(new Word(reference, currentVerseNumber, word));
+                _isBlankedOut = false;
+                break;
+            }
+            else
+            {
+                _isBlankedOut = true;
+            }
+        }
+    }
+
+    public bool GetisBlankedOut()
+    {
+        return _isBlankedOut;
+    }
+
+    public void blankingOut()
+    {
+        int maxattempts = 2;
+
+        for (int i = 0; i < maxattempts; i++)
+        {
+            int num = rand.Next(0, scripture.Count());
+            if (scripture[num].GetIsBlankedOut() == false)
+            {
+                scripture[num].BlankOut();
+                scripture[num].ChangeWord();
+                break;
             }
         }
 
-        return formattedContent;
+        SetisBlankedOut();
     }
-
-
-
 }

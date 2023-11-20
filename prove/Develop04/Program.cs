@@ -7,8 +7,9 @@ namespace MindfullnessApp
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Hello World!");
             Activity activity = new Activity();
-            activity.ShowMenu(); 
+            activity.Menu(); 
         }
     }
 }
