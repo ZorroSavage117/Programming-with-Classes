@@ -2,6 +2,8 @@ using System.Timers;
 public class Activity
 {
     private System.Timers.Timer _timer;
+    private bool _timeUp;
+
     public void Menu()
     {
         Console.Clear();
@@ -37,8 +39,6 @@ public class Activity
         }
     }
 
-    public virtual void Stop() {Menu();}
-
     public void DisplaySpinningLine(int seconds)
     {
         int counter = 0;
@@ -70,6 +70,7 @@ public class Activity
 
     public void StartTimer(int seconds)
     {
+        _timeUp = false;
         _timer = new System.Timers.Timer(seconds * 1000);
         _timer.Elapsed += TimerElapsed;
         _timer.AutoReset = false;
@@ -78,6 +79,11 @@ public class Activity
 
      private void TimerElapsed(object sender, ElapsedEventArgs e)
     {
-        Stop();
+        _timeUp = true;
+    }
+
+    public bool IsTimeUp()
+    {
+        return _timeUp;
     }
 }

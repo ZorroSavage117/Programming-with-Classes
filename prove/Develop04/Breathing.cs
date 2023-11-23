@@ -34,13 +34,12 @@ public class Breathing : Activity
         Console.WriteLine();
     }
 
-    public override void Stop()
+    public void Stop()
     {
         Console.WriteLine();
         Console.WriteLine("Well done! You have completed the breathing activity.");
-        base.DisplaySpinningLine(5);
         Console.WriteLine("You have completed the breathing activity for {0} seconds.", _sessionLength);
-        base.DisplaySpinningLine(5);
+        Thread.Sleep(1000);
         base.Menu();
     }
 }

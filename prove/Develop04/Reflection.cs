@@ -35,10 +35,22 @@ public class Reflection : Activity
 
     private void reflect()
     {
-        while (true)
+        while (!IsTimeUp())
         {
             Console.Write(_promt2[rand.Next(0, _promt2.Length)]);
             base.DisplaySpinningLine(7);
         }
+
+        Stop();
+    }
+
+    public void Stop()
+    {
+        Console.Clear();
+        Console.WriteLine();
+        Console.WriteLine("Well done! You have completed the reflection activity.");
+        Console.WriteLine("You have completed the reflection activity for {0} seconds.", _sessionLength);
+        Thread.Sleep(1000);
+        base.Menu();
     }
 }

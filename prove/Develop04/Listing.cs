@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 public class Listing : Activity
 {
     private int _sessionLength;
@@ -29,7 +31,7 @@ public class Listing : Activity
 
     public void Listin()
     {
-        while (true)
+        while (!IsTimeUp())
         {
             Console.Write("> ");
             string item = Console.ReadLine();
@@ -38,5 +40,16 @@ public class Listing : Activity
                 break;
             }
         }
+        Stop();
+    }
+
+    public void Stop()
+    {
+        Console.Clear();
+        Console.WriteLine();
+        Console.WriteLine("Well done! You have completed the listing activity.");
+        Console.WriteLine("You have completed the listing activity for {0} seconds.", _sessionLength);
+        Thread.Sleep(1000);
+        base.Menu();
     }
 }
