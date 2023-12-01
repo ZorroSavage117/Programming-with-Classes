@@ -49,6 +49,14 @@ public class Order
         {
             _total += product.Total_Price();
         }
+        if (!_customer.USA_Based())
+        {
+            _total += 35.00;
+        }
+        else
+        {
+            _total += 5.00;
+        }
     }
 
     private void Packing_Label()
